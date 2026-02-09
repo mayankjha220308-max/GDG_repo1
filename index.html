@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StarWay — Career Guidance for Indian Students</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="site-header">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 120 60" aria-hidden="true">
+          <defs>
+            <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0052CC"/>
+              <stop offset="100%" stop-color="#00BCD4"/>
+            </linearGradient>
+            <linearGradient id="capGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1565C0"/>
+              <stop offset="100%" stop-color="#0D47A1"/>
+            </linearGradient>
+          </defs>
+          <ellipse cx="18" cy="20" rx="8" ry="6" fill="url(#capGradient)"/>
+          <polygon points="10,20 26,20 28,25 8,25" fill="url(#capGradient)"/>
+          <circle cx="18" cy="32" r="7" fill="#FFB366"/>
+          <rect x="13" y="40" width="10" height="12" fill="#1565C0" rx="2"/>
+          <polygon points="45,10 50,22 62,25 50,28 45,40 40,28 28,25 40,22" fill="url(#starGradient)"/>
+          <path d="M 20 25 Q 35 15 50 20" stroke="url(#starGradient)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="20" cy="25" r="2" fill="url(#starGradient)"/>
+        </svg>
+        <h1>StarWay</h1>
+      </div>
+      <div class="header-actions">
+        <button id="themeToggle" class="theme-toggle" aria-pressed="false">🌙</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" id="sidebar" aria-label="Sidebar navigation">
+        <div class="sidebar-top">
+          <button id="sidebarToggle" class="sidebar-toggle" aria-expanded="true" aria-label="Toggle navigation">☰</button>
+        </div>
+        <nav class="nav scrollable-nav" role="navigation" aria-label="Main Navigation">
+          <button data-tab="home" class="nav-btn active">Home</button>
+          <button data-tab="test" class="nav-btn">Personality Test</button>
+          <button data-tab="colleges" class="nav-btn">College Search</button>
+          <button data-tab="scholarships" class="nav-btn">Scholarships</button>
+          <button data-tab="help" class="nav-btn">Help Desk</button>
+        </nav>
+      </aside>
+
+      <main class="main">
+      <!-- Home -->
+      <section id="home" class="tab-panel active" tabindex="0">
+        <div class="hero">
+          <div class="hero-content">
+            <h2>Find the right career path with StarWay</h2>
+            <p>Personalized guidance, college matching, scholarship discovery, and application help — built for Indian students.</p>
+            <div class="cta">
+              <button class="primary" data-tabgo="test">Take Personality Test</button>
+              <button class="secondary" data-tabgo="colleges">Search Colleges</button>
+            </div>
+          </div>
+          <div class="hero-visual" aria-hidden="true">
+            <svg viewBox="0 0 200 200" class="hero-svg">
+              <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#6C63FF"/><stop offset="1" stop-color="#00BFA6"/></linearGradient></defs>
+              <circle cx="100" cy="100" r="80" fill="url(#g)" opacity="0.15"/>
+            </svg>
+          </div>
+        </div>
+
+        <section class="features">
+          <article class="feature-card">
+            <h3>Understand Yourself</h3>
+            <p>Interactive assessments to reveal strengths across creative, logical and analytical skills.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Explore Colleges</h3>
+            <p>Search and filter sample college data by course, state, fees and cutoffs.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Find Scholarships</h3>
+            <p>Discover scholarships matched to your profile and eligibility.</p>
+          </article>
+        </section>
+
+        <section class="student-showcase">
+          <h3>Meet Our Success Stories</h3>
+          <p class="muted">Indian students achieving their dreams through StarWay</p>
+          <div class="student-grid">
+            <div class="student-card card-red">
+              <img src="https://i.pravatar.cc/150?img=1" alt="Priya Singh" class="student-avatar">
+              <h4>Mayank Jha</h4>
+              <p>B.Tech, IIT Delhi</p>
+            </div>
+            <div class="student-card card-blue">
+              <img src="https://i.pravatar.cc/150?img=12" alt="Arjun Patel" class="student-avatar">
+              <h4>Arjun Patel</h4>
+              <p>MBA, XLRI Jamshedpur</p>
+            </div>
+            <div class="student-card card-green">
+              <img src="https://i.pravatar.cc/150?img=5" alt="Isha Verma" class="student-avatar">
+              <h4>Isha Verma</h4>
+              <p>BCA, Delhi University</p>
+            </div>
+            <div class="student-card card-purple">
+              <img src="https://i.pravatar.cc/150?img=15" alt="Rohan Kumar" class="student-avatar">
+              <h4>Rohan Kumar</h4>
+              <p>B.Des, NIFT Mumbai</p>
+            </div>
+            <div class="student-card card-teal">
+              <img src="https://i.pravatar.cc/150?img=20" alt="Anjali Desai" class="student-avatar">
+              <h4>Anjali Desai</h4>
+              <p>B.Pharma, Manipal</p>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- Personality Test -->
+      <section id="test" class="tab-panel" tabindex="0">
+        <h2>Personality Assessment</h2>
+        <p class="muted">Answer honestly to get tailored career suggestions.</p>
+        <form id="quizForm" class="quiz" aria-label="Personality Quiz">
+          <div id="questions"></div>
+          <div class="quiz-actions">
+            <button type="button" id="submitQuiz" class="primary">Submit</button>
+            <button type="button" id="resetQuiz" class="secondary">Reset</button>
+          </div>
+        </form>
+
+        <div id="quizResults" class="results" hidden>
+          <h3>Results</h3>
+          <div class="bars">
+            <div class="bar-row"><span>Creative</span><progress id="creativeBar" value="0" max="100"></progress><span id="creativePct">0%</span></div>
+            <div class="bar-row"><span>Logical</span><progress id="logicalBar" value="0" max="100"></progress><span id="logicalPct">0%</span></div>
+            <div class="bar-row"><span>Analytical</span><progress id="analyticalBar" value="0" max="100"></progress><span id="analyticalPct">0%</span></div>
+          </div>
+          <div id="careerSuggestions"></div>
+          <div class="results-actions"><button id="downloadResult" class="primary">Download Result</button></div>
+        </div>
+      </section>
+
+      <!-- College Search -->
+      <section id="colleges" class="tab-panel" tabindex="0">
+        <h2>College Search</h2>
+        <div class="filters">
+          <label>Course<select id="filterCourse"><option value="">Any</option></select></label>
+          <label>State<select id="filterState"><option value="">Any</option></select></label>
+          <label>Fees<select id="filterFees"><option value="">Any</option><option value="0-50000">0 - 50,000</option><option value="50001-200000">50,001 - 2,00,000</option><option value="200001-9999999">200,001+</option></select></label>
+          <label>Cutoff<select id="filterCutoff"><option value="">Any</option><option value="0-50">0 - 50%</option><option value="51-70">51 - 70%</option><option value="71-100">71%+</option></select></label>
+          <label>Entrance Rank<input id="filterRank" type="number" min="0" placeholder="Max rank (optional)"></label>
+          <button id="applyFilters" class="primary small">Apply</button>
+        </div>
+        <div id="collegeResults" class="cards"></div>
+      </section>
+
+      <!-- Scholarships -->
+      <section id="scholarships" class="tab-panel" tabindex="0">
+        <h2>Scholarship Finder</h2>
+        <form id="scholarForm" class="scholar-form">
+          <label>Age<input id="age" type="number" min="0"></label>
+          <label>Category<select id="category"><option>General</option><option>OBC</option><option>SC</option><option>ST</option></select></label>
+          <label>Family Income (₹)<input id="income" type="number" min="0"></label>
+          <label>PWD<select id="pwd"><option value="no">No</option><option value="yes">Yes</option></select></label>
+          <label>Parents in Defense<select id="defense"><option value="no">No</option><option value="yes">Yes</option></select></label>
+          <div class="quiz-actions"><button type="button" id="findScholarships" class="primary">Find Scholarships</button></div>
+        </form>
+        <div id="scholarResults" class="cards"></div>
+      </section>
+
+      <!-- Help Desk -->
+      <section id="help" class="tab-panel" tabindex="0">
+        <h2>Help Desk</h2>
+        <p class="muted">Ask about application process, exam dates or eligibility.</p>
+        <div class="chat">
+          <div id="chatWindow" class="chat-window" aria-live="polite"></div>
+          <div class="chat-input">
+            <input id="helpQuery" placeholder="Type a question or keyword..." aria-label="Help query">
+            <button id="askHelp" class="primary">Ask</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Large fixed bottom disclaimer card -->
+    <div id="bottomCard" class="bottom-card" role="dialog" aria-live="polite">
+      <div class="bottom-card-content">
+        <div class="bottom-text">
+          <strong>StarWay — Career guidance for Indian students. Use this tool for educational purposes only.</strong>
+          <div class="muted">Disclaimer: Sample data only; verify with official sources.</div>
+        </div>
+        <button id="closeBottom" class="close-bottom" aria-label="Dismiss">✕</button>
+      </div>
+    </div>
+
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
