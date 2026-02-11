@@ -54,18 +54,29 @@
     {q:'I enjoy experiments and careful evaluation.',k:'analytical'},
     {q:'I like presenting ideas visually.',k:'creative'},
     {q:'I enjoy algorithms or logical games.',k:'logical'},
-    {q:'I prefer interpreting results and trends.',k:'analytical'}
+    {q:'I prefer interpreting results and trends.',k:'analytical'},
+    {q:'I love creating art, music or crafts.',k:'creative'},
+    {q:'Colors, aesthetics and design inspire me.',k:'creative'},
+    {q:'I enjoy storytelling and creative writing.',k:'creative'},
+    {q:'I like thinking outside the box and being unconventional.',k:'creative'},
+    {q:'I prefer working with numbers and spreadsheets.',k:'logical'},
+    {q:'I enjoy building or fixing things.',k:'logical'},
+    {q:'I like detailed research and data collection.',k:'analytical'},
+    {q:'I am good at spotting patterns and inconsistencies.',k:'analytical'},
+    {q:'Social media graphics and visual content attract me.',k:'creative'},
+    {q:'I enjoy strategy games and logical thinking.',k:'logical'},
+    {q:'I like writing reports and summarizing findings.',k:'analytical'}
   ];
 
   function renderQuiz(){
     questionsEl.innerHTML='';
     quizQuestions.forEach((item,i)=>{
       const div = document.createElement('div'); div.className='question';
-      div.innerHTML = `<label>${i+1}. ${item.q}</label>
+      div.innerHTML = `<label class="question-text">${i+1}. ${item.q}</label>
       <div class="options">
-        <label><input type="radio" name="q${i}" value="2"> Strongly agree</label>
-        <label><input type="radio" name="q${i}" value="1"> Agree</label>
-        <label><input type="radio" name="q${i}" value="0"> Neutral/Disagree</label>
+        <label class="option"><input type="radio" name="q${i}" value="2"> Strongly agree</label>
+        <label class="option"><input type="radio" name="q${i}" value="1"> Agree</label>
+        <label class="option"><input type="radio" name="q${i}" value="0"> Neutral/Disagree</label>
       </div>`;
       questionsEl.appendChild(div);
     });
@@ -99,57 +110,83 @@
     creativeBar.value=res.creative; logicalBar.value=res.logical; analyticalBar.value=res.analytical;
     creativePct.textContent = res.creative + '%'; logicalPct.textContent = res.logical + '%'; analyticalPct.textContent = res.analytical + '%';
     
-    // Suggest careers (simple logic)
-    const arr = Object.entries(res).sort((a,b)=>b[1]-a[1]);
-    const top = arr[0][0];
+    // Get all scores and sort by highest
+    const scores = Object.entries(res).sort((a,b)=>b[1]-a[1]);
+    
+    // Filter: only include fields with >= 50%
+    const qualifiedFields = scores.filter(([k,v]) => v >= 50);
+    
+    if(qualifiedFields.length === 0){
+      careerSuggestions.innerHTML = `<h4>Result</h4><p class="muted">Your scores are below 50% in all fields. Consider exploring various career paths or retaking the assessment.</p>`;
+      quizResultsData = {creative:res.creative,logical:res.logical,analytical:res.analytical,topStrength:null,careers:[],colleges:[]};
+      quizResults.hidden=false;
+      setTimeout(()=>quizResults.scrollIntoView({behavior:'smooth',block:'start'}),200);
+      return;
+    }
+    
     const suggestions = {
       creative:[
         {title:'Graphic Designer',desc:'Design visual content for digital and print media.'},
         {title:'Content Creator',desc:'Write, create and manage creative content.'},
-        {title:'UX Designer',desc:'Create user experiences for digital products.'}
+        {title:'UX/UI Designer',desc:'Create user experiences for digital products.'},
+        {title:'Animator',desc:'Bring characters and stories to life through animation.'},
+        {title:'Illustrator',desc:'Create artistic illustrations for books, games, and media.'}
       ],
       logical:[
         {title:'Software Engineer',desc:'Develop software and solve technical problems.'},
-        {title:'Data Engineer',desc:'Build systems for data processing.'},
-        {title:'Full Stack Developer',desc:'Build complete web applications.'}
+        {title:'Data Engineer',desc:'Build systems for data processing and analytics.'},
+        {title:'Full Stack Developer',desc:'Build complete web and mobile applications.'},
+        {title:'Systems Administrator',desc:'Manage and maintain computer systems and networks.'},
+        {title:'IT Consultant',desc:'Advise businesses on technology solutions.'}
       ],
       analytical:[
-        {title:'Data Scientist',desc:'Analyze data and build models.'},
-        {title:'Research Analyst',desc:'Conduct research and interpret results.'},
-        {title:'Business Analyst',desc:'Analyze business processes and improve efficiency.'}
+        {title:'Data Scientist',desc:'Analyze data and build predictive models.'},
+        {title:'Business Analyst',desc:'Analyze business processes and improve efficiency.'},
+        {title:'Research Analyst',desc:'Conduct research and interpret findings.'},
+        {title:'Statistician',desc:'Analyze statistical data for business decisions.'},
+        {title:'Financial Analyst',desc:'Analyze financial data and market trends.'}
       ]
     };
     
-    // Find colleges matching the top career
+    // Find colleges matching the qualified fields
     const careerToColleges = {
-      creative: {courses:['Design','B.Des','Arts']},
-      logical: {courses:['B.Tech','M.Tech','BCA']},
-      analytical: {courses:['B.Tech','M.Tech','Science']}
+      creative: {courses:['Design','B.Des','Arts','BFA']},
+      logical: {courses:['B.Tech','M.Tech','BCA','CSE']},
+      analytical: {courses:['B.Tech','M.Tech','Science','B.Sc']}
     };
     
-    const targetCourses = careerToColleges[top]?.courses || [];
-    const suggestedCollegesList = colleges.filter(c=> c.courses.some(course=> targetCourses.includes(course))).slice(0,3);
+    let allSuggestedColleges = [];
+    qualifiedFields.forEach(([field,score]) => {
+      const targetCourses = careerToColleges[field]?.courses || [];
+      const fieldColleges = colleges.filter(c=> c.courses.some(course=> targetCourses.includes(course)));
+      allSuggestedColleges = allSuggestedColleges.concat(fieldColleges);
+    });
+    const suggestedCollegesList = [...new Set(allSuggestedColleges.map(c=>c.name))].slice(0,4).map(name => allSuggestedColleges.find(c=>c.name===name));
     
-    // Store for download
-    quizResultsData = {creative:res.creative,logical:res.logical,analytical:res.analytical,topStrength:top,careers:suggestions[top],colleges:suggestedCollegesList};
-    
-    // Render careers
-    let careerHTML = `<h4>Top Strength: ${top.charAt(0).toUpperCase() + top.slice(1)}</h4><div class="careers-list">`;
-    suggestions[top].forEach(s=>{careerHTML += `<div class="card"><h4>${s.title}</h4><p class="muted">${s.desc}</p></div>`});
+    // Render qualified careers
+    let careerHTML = `<h4>Qualified Strengths (50%+)</h4><div class="careers-list">`;
+    qualifiedFields.forEach(([field,score]) => {
+      const careerList = suggestions[field];
+      careerList.forEach(c=>{
+        careerHTML += `<div class="card"><h4>${c.title}</h4><p class="muted">${c.desc}</p></div>`;
+      });
+    });
     careerHTML += '</div>';
     
     // Render suggested colleges
     if(suggestedCollegesList.length>0){
       careerHTML += `<h4 style="margin-top:14px;">Suggested Colleges</h4><div class="colleges-list">`;
-      suggestedCollegesList.forEach(c=>{careerHTML += `<div class="card"><h4>${c.name}</h4><p class="muted">${c.city}, ${c.state}</p><p>Courses: ${c.courses.join(', ')}</p></div>`});
+      suggestedCollegesList.forEach(c=>{if(c) careerHTML += `<div class="card"><h4>${c.name}</h4><p class="muted">${c.city}, ${c.state}</p><p>Courses: ${c.courses.join(', ')}</p></div>`});
       careerHTML += '</div>';
     }
+    
+    quizResultsData = {creative:res.creative,logical:res.logical,analytical:res.analytical,topStrength:qualifiedFields[0]?.[0],careers:qualifiedFields.map(f=>suggestions[f[0]]).flat(),colleges:suggestedCollegesList};
     
     careerSuggestions.innerHTML = careerHTML;
     quizResults.hidden=false;
     // Scroll to results
     setTimeout(()=>quizResults.scrollIntoView({behavior:'smooth',block:'start'}),200);
-  });
+  });;
 
   document.getElementById('resetQuiz').addEventListener('click', ()=>{document.getElementById('quizForm').reset();quizResults.hidden=true;quizResultsData={}});
 
